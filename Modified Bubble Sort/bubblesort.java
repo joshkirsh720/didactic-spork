@@ -1,28 +1,18 @@
 
+public class BubbleSort {
+    public static void sort(Comparable[] arr, Comparison compare) {
+        int count = -1;
+        while(count != 0) {
 
-public class bubblesort {
+            count = 0;
 
-    public static void main(String[] args) {
+            for(int i = 0; i < arr.length-1; i++) {
 
-        String[] arr = {"d", "a", "b", "b", "c", "A1"};
-        ArrayMethods.printArray(arr);
-        sort(arr, 1);
-        ArrayMethods.printArray(arr);
-
-    }
-
-    //if direc is 1, sort acending
-    //if direc is -1, sort descending
-    public static void sort(Comparable[] arr, int direc) {
-        for(int i = 0; i < arr.length; i++) {
-
-            for(int x = i; x < arr.length-1; x++) {
-
-                if(direc == 1 ? arr[x].compareTo(arr[x+1]) > 0 : arr[x].compareTo(arr[x+1]) < 0) {
-                    Comparable temp = arr[x];
-                    arr[x] = arr[x+1];
-                    arr[x+1] = temp;
-
+                if(compare.compare(arr[i], arr[i+1])) {
+                    Comparable temp = arr[i];
+                    arr[i] = arr[i+1];
+                    arr[i+1] = temp;
+                    count++;
                 }
             }
         }
