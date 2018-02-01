@@ -14,6 +14,7 @@ public class Bank {
         for(User u : users) {
             if(name.equals(u.getName()) && pin == u.getPin()) return u;
         }
+
         return null;
     }
 }

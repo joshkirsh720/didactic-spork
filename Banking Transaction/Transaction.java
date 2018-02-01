@@ -6,4 +6,9 @@ public class Transaction {
         type = t;
         amount = a;
     }
+
+    @Override
+    public String toString() {
+        return type + " " + amount;
+    }
 }
