@@ -1,8 +1,5 @@
-public class Bee extends Hive{
+public class Bee extends Space {
 	public Bee(){
 
 	}
-//hi im a bee
-
-
 }

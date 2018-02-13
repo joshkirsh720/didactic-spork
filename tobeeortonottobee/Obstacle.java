@@ -1,4 +1,4 @@
-public class Obstacle extends Hive{
+public class Obstacle extends Space {
 	public Obstacle(){
 
 

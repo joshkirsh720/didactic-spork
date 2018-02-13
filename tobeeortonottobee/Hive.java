@@ -1,8 +1,7 @@
-public class Hive{
+public class Hive extends Space{
+    private Point location;
 
-	public Hive(){
-
-
+	public Hive(int x, int y, int z){
+        location = new Point(x, y, z);
 	}
-//this is the main class which all other classes are children of!
 }
