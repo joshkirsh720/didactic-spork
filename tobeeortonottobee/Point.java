@@ -11,4 +11,8 @@ public class Point {
         y = yi;
         z = zi;
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ", " + z + ")";
+    }
 }
