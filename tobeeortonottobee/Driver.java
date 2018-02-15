@@ -11,21 +11,13 @@ public class Driver {
 
 		if(input.equals("r")) {
 			//set up space
-			int dim = (int) (Math.random() * 26 + 25);
-			space = new Space[dim][dim][dim];
-
-			//start with making everything an empty space
-            for(int x = 0; x < dim; x++) {
-                for (int y = 0; y < dim; y++) {
-                    for(int z = 0; z < dim; z++) {
-                        space[x][y][z] = new EmptySpace(x, y, z);
-                    }
-                }
-            }
+			//int dim = (int) (Math.random() * 26 + 25);
+			int dim = 25;
+            space = new Space[dim][dim][dim];
 
 
 			//generate hive
-            Point start = new Point((int) (Math.random() * dim + 1), (int) (Math.random() * dim + 1), (int) (Math.random() * dim + 1));
+            Point start = new Point((int) (Math.random() * dim), (int) (Math.random() * dim), (int) (Math.random() * dim));
 
             int indexOut = -1;
 
@@ -59,10 +51,53 @@ public class Driver {
 
             //now generate the obstacles (30% of total space)
             int numberOfObstacles = (int) (Math.pow(dim, 3) * 0.3);
-		}
-		else {
 
+            for(int i = 0; i < numberOfObstacles; i++) {
+                int x = (int) (Math.random() * dim);
+                int y = (int) (Math.random() * dim);
+                int z = (int) (Math.random() * dim);
+
+                if(space[x][y][z] == null) {
+                    space[x][y][z] = new Obstacle(x, y, z);
+                }
+                else {
+                    numberOfObstacles++;
+                    continue;
+                }
+            }
+
+            //generate bees
+            int numBees = 15;
+            for(int i = 0; i < numBees; i++) {
+                int x = (int) (Math.random() * dim);
+                int y = (int) (Math.random() * dim);
+                int z = (int) (Math.random() * dim);
+
+                if(space[x][y][z] == null) {
+                    space[x][y][z] = new Bee(x, y, z);
+                }
+                else {
+                    numBees++;
+                    continue;
+                }
+            }
+
+            //end with filling in everything else with empty spaces
+            for(int x = 0; x < dim; x++) {
+                for (int y = 0; y < dim; y++) {
+                    for(int z = 0; z < dim; z++) {
+                        if(space[x][y][z] == null) space[x][y][z] = new EmptySpace(x, y, z);
+                    }
+                }
+            }
 		}
+		else if(input.equals("f")){
+            
+		}
+		else if(input.equals("s")) {
+
+        }
+
 
 	}
 }
