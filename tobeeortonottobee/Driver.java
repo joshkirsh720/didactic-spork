@@ -44,12 +44,12 @@ public class Driver {
                     hiveArr[i] = new Hive(start.x + (xMult * i), start.y + (yMult * i), start.z + (zMult * i));
                     space[hiveArr[i].getX()][hiveArr[i].getY()][hiveArr[i].getZ()] = hiveArr[i];
                 } catch(ArrayIndexOutOfBoundsException e) {
-                    if(indexOut == -1) indexOut = i;
+                    if(indexOut == -1) indexOut = i-1;
 
 
                     //quick maffs to move hive backwards from the starting location if the method above goes out of bounds
                     //one is subtracted so that the first hive created this way is not on the same space as the very first one
-                    hiveArr[i] = new Hive(start.x - 1 - (xMult * (i - indexOut)) , start.y - 1 - (yMult * (i - indexOut)), start.z - 1 - (zMult * (i - indexOut)));
+                    hiveArr[i] = new Hive(start.x - (xMult * (i - indexOut)) , start.y - (yMult * (i - indexOut)), start.z - (zMult * (i - indexOut)));
                     space[hiveArr[i].getX()][hiveArr[i].getY()][hiveArr[i].getZ()] = hiveArr[i];
                 }
             }
