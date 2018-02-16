@@ -95,7 +95,7 @@ public class Driver {
             }
 		}
 		else if(input.equals("f")){
-		    File file = new File("C:\\Users\\joshu\\Desktop\\Computer Science Projects\\Bee Project\\src\\beesetup1.txt");
+		    File file = new File("beesetup1.txt");
             Scanner fReader = new Scanner(file);
 
             int dim = Integer.parseInt(fReader.nextLine().split(",")[0]);
