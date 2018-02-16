@@ -1,9 +1,11 @@
 import java.util.Scanner;
+import java.io.*;
 
 public class Driver {
-	public static void main(String[]args){
+	public static void main(String[]args) throws FileNotFoundException{
         Space[][][] space;
         Hive[] hiveArr = new Hive[15];
+        Bee[] beeArr = new Bee[15];
 
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Read from file or random? f or r?");
@@ -74,7 +76,8 @@ public class Driver {
                 int z = (int) (Math.random() * dim);
 
                 if(space[x][y][z] == null) {
-                    space[x][y][z] = new Bee(x, y, z);
+                    beeArr[i] = new Bee(x, y, z);
+                    space[x][y][z] = beeArr[i];
                 }
                 else {
                     numBees++;
@@ -92,12 +95,61 @@ public class Driver {
             }
 		}
 		else if(input.equals("f")){
-            
+		    File file = new File("C:\\Users\\joshu\\Desktop\\Computer Science Projects\\Bee Project\\src\\beesetup1.txt");
+            Scanner fReader = new Scanner(file);
+
+            int dim = Integer.parseInt(fReader.nextLine().split(",")[0]);
+            space = new Space[dim][dim][dim];
+
+            //do the hive
+            for(int i = 0; i < hiveArr.length; i++) {
+                String[] coords = fReader.nextLine().split(",");
+                int x = Integer.parseInt(coords[0]);
+                int y = Integer.parseInt(coords[1]);
+                int z = Integer.parseInt(coords[2]);
+
+                hiveArr[i] = new Hive(x, y, z);
+                space[x][y][z] = hiveArr[i];
+            }
+
+            //place the bees
+            for(int i = 0; i < beeArr.length; i++) {
+                String[] coords = fReader.nextLine().split(",");
+                int x = Integer.parseInt(coords[0]);
+                int y = Integer.parseInt(coords[1]);
+                int z = Integer.parseInt(coords[2]);
+
+                beeArr[i] = new Bee(x, y, z);
+                space[x][y][z] = beeArr[i];
+            }
+
+            //skips number that contains obstacle lines
+            fReader.nextLine();
+
+            //does the obstacles
+            while(fReader.hasNextLine()) {
+                String[] coords = fReader.nextLine().split(",");
+                int x = Integer.parseInt(coords[0]);
+                int y = Integer.parseInt(coords[1]);
+                int z = Integer.parseInt(coords[2]);
+
+                space[x][y][z] = new Obstacle(x, y, z);
+            }
+
+            //end with filling in everything else with empty spaces
+            for(int x = 0; x < dim; x++) {
+                for (int y = 0; y < dim; y++) {
+                    for(int z = 0; z < dim; z++) {
+                        if(space[x][y][z] == null) space[x][y][z] = new EmptySpace(x, y, z);
+                    }
+                }
+            }
+
+            fReader.close();
 		}
-		else if(input.equals("s")) {
-
-        }
 
 
+
+		//start doing the actual thing here
 	}
 }
