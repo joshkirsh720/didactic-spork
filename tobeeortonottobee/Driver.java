@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Driver {
 	public static void main(String[]args) throws FileNotFoundException{
+
         Space[][][] space;
         Hive[] hiveArr = new Hive[15];
         Bee[] beeArr = new Bee[15];
@@ -95,7 +96,7 @@ public class Driver {
             }
 		}
 		else if(input.equals("f")){
-		    File file = new File("beesetup1.txt");
+		    File file = new File("C:\\Users\\joshu\\Desktop\\Computer Science Projects\\Bee Project\\src\\beesetup1.txt");
             Scanner fReader = new Scanner(file);
 
             int dim = Integer.parseInt(fReader.nextLine().split(",")[0]);
@@ -151,5 +152,6 @@ public class Driver {
 
 
 		//start doing the actual thing here
+
 	}
 }
