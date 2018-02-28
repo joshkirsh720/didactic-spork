@@ -18,45 +18,41 @@ public class Bee extends Space {
 
     public void moveToHive(Bee bee, Hive hive, Space[][][] space) {
 		int [][][] intSpace = spaceToIntArr(space);
-
+		intSpace[bee.getX()][bee.getY()][bee.getZ()] = 0;
 		DFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()));
 	}
 
+
 	private boolean DFS(int x, int y, int z, int[][][] space, Point target) {
-		//one is visited, 0 is unvisited
-		space[x][y][z] = 1;
 
-        Queue<Point> ranks = rankByClosest(new Point(x, y, z),space, target);
+		System.out.println("(" + x + ", " + y + ", " + z + ")");
 
-        for(;;) {
+		if(x == target.x && y == target.y && z == target.z) {
+			path.push(new Point(x, y, z));
+			return true;
+		}
+		else if(space[x][y][z] == 0) {
+			space[x][y][z] = 1;
 
-            try {
-                Point  p = ranks.remove();
-                if(space[p.x][p.y][p.z] == 0 && DFS(p.x, p.y, p.z, space, target)) {
-                    path.push(p);
-                }
-                else if(space[p.x][p.y][p.z] == 2 && (p.x == target.x && p.y == target.y && p.z == target.z)) {
-                    path.push(p);
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            } catch (NoSuchElementException e) {
-                //if the queue is empty, you're done
-                break;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                //if the point is out of bounds continue to the next one
-                continue;
-            }
-        }
+			Point[] ranks = rankByClosest(new Point(x, y, z), space, target);
 
-	    return false;
+			for(Point p : ranks) {
+				try {
+					if (DFS(p.x, p.y, p.z, space, target)) {
+						path.push(new Point(x, y, z));
+						return true;
+					}
+				} catch(ArrayIndexOutOfBoundsException e) {
+					return false;
+				}
+			}
+		}
+
+		return false;
 	}
 
-	private Queue<Point> rankByClosest(Point current, int[][][] space, Point target) {
+	private Point[] rankByClosest(Point current, int[][][] space, Point target) {
 	    Point[] adjPoints = new Point[26];
-	    Queue<Point> qP = new LinkedList<Point>();
 
 	    adjPoints[0] = new Point(current.x +1, current.y, current.z);
 		adjPoints[1] = new Point(current.x-1, current.y, current.z);
@@ -86,8 +82,10 @@ public class Bee extends Space {
 		adjPoints[25] = new Point(current.x-1, current.y-1, current.z-1);
 		//now I know what true pain is
 
+		//sort those bois by closest to target
 		int count = 0;
 		do{
+			count = 0;
 			for(int i = 0; i < adjPoints.length; i++) {
 				if(i < adjPoints.length-1 && (manDis(adjPoints[i], target) < manDis(adjPoints[i+1], target))) {
 					count ++;
@@ -98,9 +96,7 @@ public class Bee extends Space {
 			}
 		} while(count != 0);
 
-		for(Point p : adjPoints) qP.add(p);
-
-		return qP;
+		return adjPoints;
     }
 
 	private int[][][] spaceToIntArr(Space[][][] space) {
@@ -120,7 +116,7 @@ public class Bee extends Space {
 	}
 
 	private int manDis(Point p, Point target) {
-		return Math.abs(p.x - target.x) + Math.abs(p.y - target.y) +Math.abs(p.z - target.z);
+		return Math.abs(p.x - target.x) + Math.abs(p.y - target.y) + Math.abs(p.z - target.z);
 	}
 
 	public void printPath() {

@@ -150,10 +150,13 @@ public class Driver {
 
 
 		//start doing the actual thing here
-        for(int i = 0; i < beeArr.length; i++) {
+
+        /*for(int i = 0; i < beeArr.length; i++) {
 		    beeArr[i].moveToHive(beeArr[i], hiveArr[i], space);
         }
 
-        for(Bee bee : beeArr) bee.printPath();
+        for(Bee bee : beeArr) bee.printPath();*/
+
+        beeArr[0].moveToHive(beeArr[0], hiveArr[0], space);
 	}
 }
