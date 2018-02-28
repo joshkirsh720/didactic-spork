@@ -4,7 +4,7 @@ import java.io.*;
 public class Driver {
 	public static void main(String[]args) throws FileNotFoundException{
 
-        Space[][][] space;
+        Space[][][] space = null;
         Hive[] hiveArr = new Hive[15];
         Bee[] beeArr = new Bee[15];
 
@@ -49,9 +49,6 @@ public class Driver {
                 }
             }
 
-            for(Hive h : hiveArr) System.out.println(h);
-
-
             //now generate the obstacles (30% of total space)
             int numberOfObstacles = (int) (Math.pow(dim, 3) * 0.3);
 
@@ -81,7 +78,7 @@ public class Driver {
                     space[x][y][z] = beeArr[i];
                 }
                 else {
-                    numBees++;
+                    i--;
                     continue;
                 }
             }
@@ -149,9 +146,14 @@ public class Driver {
             fReader.close();
 		}
 
+        System.out.println("Space generation complete");
 
 
 		//start doing the actual thing here
+        for(int i = 0; i < beeArr.length; i++) {
+		    beeArr[i].moveToHive(beeArr[i], hiveArr[i], space);
+        }
 
+        for(Bee bee : beeArr) bee.printPath();
 	}
 }
