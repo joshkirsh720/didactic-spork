@@ -93,7 +93,9 @@ public class Driver {
             }
 		}
 		else if(input.equals("f")){
-		    File file = new File("C:\\Users\\joshu\\Desktop\\Computer Science Projects\\Bee Project\\src\\beesetup1.txt");
+            System.out.println("Which file?");
+		    int num = scan.nextInt();
+		    File file = new File("C:\\Users\\joshu\\Desktop\\Computer Science Projects\\Bee Project\\src\\beesetup" + num + ".txt");
             Scanner fReader = new Scanner(file);
 
             int dim = Integer.parseInt(fReader.nextLine().split(",")[0]);
@@ -151,12 +153,17 @@ public class Driver {
 
 		//start doing the actual thing here
 
-        /*for(int i = 0; i < beeArr.length; i++) {
+        for(int i = 0; i < beeArr.length; i++) {
 		    beeArr[i].moveToHive(beeArr[i], hiveArr[i], space);
         }
 
-        for(Bee bee : beeArr) bee.printPath();*/
+        int sumMoves = 0;
+        for(int i = 0; i < beeArr.length; i++) {
+            System.out.println("Bee #" + (i+1) + ": ");
+            sumMoves += beeArr[i].printPath();
+            System.out.println("\n\n\n");
+        }
 
-        beeArr[0].moveToHive(beeArr[0], hiveArr[0], space);
+        System.out.println("The sum of all moves is " + sumMoves);
 	}
 }

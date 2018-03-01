@@ -25,8 +25,6 @@ public class Bee extends Space {
 
 	private boolean DFS(int x, int y, int z, int[][][] space, Point target) {
 
-		System.out.println("(" + x + ", " + y + ", " + z + ")");
-
 		if(x == target.x && y == target.y && z == target.z) {
 			path.push(new Point(x, y, z));
 			return true;
@@ -87,7 +85,7 @@ public class Bee extends Space {
 		do{
 			count = 0;
 			for(int i = 0; i < adjPoints.length; i++) {
-				if(i < adjPoints.length-1 && (manDis(adjPoints[i], target) < manDis(adjPoints[i+1], target))) {
+				if(i < adjPoints.length-1 && (manDis(adjPoints[i], target) > manDis(adjPoints[i+1], target))) {
 					count ++;
 					Point temp = adjPoints[i];
 					adjPoints[i] = adjPoints[i+1];
@@ -119,7 +117,9 @@ public class Bee extends Space {
 		return Math.abs(p.x - target.x) + Math.abs(p.y - target.y) + Math.abs(p.z - target.z);
 	}
 
-	public void printPath() {
+	public int printPath() {
+		int size = path.size();
 		while(!path.empty()) System.out.println(path.pop());
+		return size;
 	}
 }
