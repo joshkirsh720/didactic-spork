@@ -16,6 +16,13 @@ public class Space {
         return location.z;
     }
 
+    public Point getParent() {
+        return location.parent;
+    }
+    public void setParent(Point p) {
+        location.parent = p;
+    }
+
     protected void setLocation(int xi, int yi, int zi) {
         location.x = xi;
         location.y = yi;

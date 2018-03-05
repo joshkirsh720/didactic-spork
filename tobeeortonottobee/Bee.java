@@ -2,6 +2,7 @@ import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 public class Bee extends Space {
     Stack<Point> path;
@@ -19,7 +20,8 @@ public class Bee extends Space {
     public void moveToHive(Bee bee, Hive hive, Space[][][] space) {
 		int [][][] intSpace = spaceToIntArr(space);
 		intSpace[bee.getX()][bee.getY()][bee.getZ()] = 0;
-		DFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()));
+		//DFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()));
+		BFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()), space);
 	}
 
 
@@ -32,7 +34,7 @@ public class Bee extends Space {
 		else if(space[x][y][z] == 0) {
 			space[x][y][z] = 1;
 
-			Point[] ranks = rankByClosest(new Point(x, y, z), space, target);
+			Point[] ranks = rankByClosest(new Point(x, y, z), space, target, null);
 
 			for(Point p : ranks) {
 				try {
@@ -49,35 +51,60 @@ public class Bee extends Space {
 		return false;
 	}
 
-	private Point[] rankByClosest(Point current, int[][][] space, Point target) {
+	private void BFS(int x, int y, int z, int[][][] space, Point target, Space[][][] realSpace) {
+		LinkedList<Point> adjPoints = new LinkedList<Point>();
+
+		Point[] ranks = rankByClosest(new Point(x, y, z), space, target, new Point(x, y, z));
+
+		for(Point p : ranks) adjPoints.add(p);
+
+		while(!adjPoints.isEmpty()) {
+			Point searching = adjPoints.remove();
+
+            try {
+                if (space[searching.x][searching.y][searching.z] != 0) continue;
+                if (searching.x == target.x && searching.y == target.y && searching.z == target.z)
+                    System.out.println("reached hive");
+                System.out.println(searching);
+                space[searching.x][searching.y][searching.z] = 1;
+                Point[] searchingRanks = rankByClosest(searching, space, target, searching);
+                for(Point p : searchingRanks) adjPoints.add(p);
+
+            } catch(ArrayIndexOutOfBoundsException e) {
+                continue;
+            }
+		}
+	}
+
+	private Point[] rankByClosest(Point current, int[][][] space, Point target, Point parent) {
 	    Point[] adjPoints = new Point[26];
 
-	    adjPoints[0] = new Point(current.x +1, current.y, current.z);
-		adjPoints[1] = new Point(current.x-1, current.y, current.z);
-		adjPoints[2] = new Point(current.x, current.y+1, current.z);
-		adjPoints[3] = new Point(current.x, current.y-1, current.z);
-		adjPoints[4] = new Point(current.x, current.y, current.z+1);
-		adjPoints[5] = new Point(current.x, current.y, current.z-1);
-		adjPoints[6] = new Point(current.x+1, current.y+1, current.z);
-		adjPoints[7] = new Point(current.x-1, current.y+1, current.z);
-		adjPoints[8] = new Point(current.x+1, current.y-1, current.z);
-		adjPoints[9] = new Point(current.x-1, current.y-1, current.z);
-		adjPoints[10] = new Point(current.x, current.y+1, current.z+1);
-		adjPoints[11] = new Point(current.x, current.y-1, current.z+1);
-		adjPoints[12] = new Point(current.x, current.y+1, current.z-1);
-		adjPoints[13] = new Point(current.x, current.y-1, current.z-1);
-		adjPoints[14] = new Point(current.x+1, current.y, current.z+1);
-		adjPoints[15] = new Point(current.x+1, current.y, current.z-1);
-		adjPoints[16] = new Point(current.x-1, current.y, current.z+1);
-		adjPoints[17] = new Point(current.x-1, current.y, current.z-1);
-		adjPoints[18] = new Point(current.x+1, current.y+1, current.z+1);
-		adjPoints[19] = new Point(current.x-1, current.y+1, current.z+1);
-		adjPoints[20] = new Point(current.x+1, current.y-1, current.z+1);
-		adjPoints[21] = new Point(current.x+1, current.y+1, current.z-1);
-		adjPoints[22] = new Point(current.x-1, current.y-1, current.z+1);
-		adjPoints[23] = new Point(current.x+1, current.y-1, current.z-1);
-		adjPoints[24] = new Point(current.x-1, current.y+1, current.z-1);
-		adjPoints[25] = new Point(current.x-1, current.y-1, current.z-1);
+	    adjPoints[0] = new Point(current.x +1, current.y, current.z, parent);
+		adjPoints[1] = new Point(current.x-1, current.y, current.z, parent);
+		adjPoints[2] = new Point(current.x, current.y+1, current.z, parent);
+		adjPoints[3] = new Point(current.x, current.y-1, current.z, parent);
+		adjPoints[4] = new Point(current.x, current.y, current.z+1, parent);
+		adjPoints[5] = new Point(current.x, current.y, current.z-1, parent);
+		adjPoints[6] = new Point(current.x+1, current.y+1, current.z, parent);
+		adjPoints[7] = new Point(current.x-1, current.y+1, current.z, parent);
+		adjPoints[8] = new Point(current.x+1, current.y-1, current.z, parent);
+		adjPoints[9] = new Point(current.x-1, current.y-1, current.z, parent);
+		adjPoints[10] = new Point(current.x, current.y+1, current.z+1, parent);
+		adjPoints[11] = new Point(current.x, current.y-1, current.z+1, parent);
+		adjPoints[12] = new Point(current.x, current.y+1, current.z-1, parent);
+		adjPoints[13] = new Point(current.x, current.y-1, current.z-1, parent);
+		adjPoints[14] = new Point(current.x+1, current.y, current.z+1, parent);
+		adjPoints[15] = new Point(current.x+1, current.y, current.z-1, parent);
+		adjPoints[16] = new Point(current.x-1, current.y, current.z+1, parent);
+		adjPoints[17] = new Point(current.x-1, current.y, current.z-1, parent);
+		adjPoints[18] = new Point(current.x+1, current.y+1, current.z+1, parent);
+		adjPoints[19] = new Point(current.x-1, current.y+1, current.z+1, parent);
+		adjPoints[20] = new Point(current.x+1, current.y-1, current.z+1, parent);
+		adjPoints[21] = new Point(current.x+1, current.y+1, current.z-1, parent);
+		adjPoints[22] = new Point(current.x-1, current.y-1, current.z+1, parent);
+		adjPoints[23] = new Point(current.x+1, current.y-1, current.z-1, parent);
+		adjPoints[24] = new Point(current.x-1, current.y+1, current.z-1, parent);
+		adjPoints[25] = new Point(current.x-1, current.y-1, current.z-1, parent);
 		//now I know what true pain is
 
 		//sort those bois by closest to target
