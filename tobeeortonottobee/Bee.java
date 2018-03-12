@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.Queue;
@@ -20,12 +21,11 @@ public class Bee extends Space {
     public void moveToHive(Bee bee, Hive hive, Space[][][] space) {
 		int [][][] intSpace = spaceToIntArr(space);
 		intSpace[bee.getX()][bee.getY()][bee.getZ()] = 0;
-		//DFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()));
-		BFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()), space);
+		DFS(bee.getX(), bee.getY(), bee.getZ(), intSpace, new Point(hive.getX(), hive.getY(), hive.getZ()), space);
 	}
 
 
-	private boolean DFS(int x, int y, int z, int[][][] space, Point target) {
+	private boolean DFS(int x, int y, int z, int[][][] space, Point target, Space[][][] realSpace) {
 
 		if(x == target.x && y == target.y && z == target.z) {
 			path.push(new Point(x, y, z));
@@ -34,11 +34,12 @@ public class Bee extends Space {
 		else if(space[x][y][z] == 0) {
 			space[x][y][z] = 1;
 
-			Point[] ranks = rankByClosest(new Point(x, y, z), space, target, null);
+			//real space and parents and not used in the DFS for pathing
+			Point[] ranks = rankByClosest(new Point(x, y, z), space, target, new Point(0, 0, 0), new Space[1][1][1]);
 
 			for(Point p : ranks) {
 				try {
-					if (DFS(p.x, p.y, p.z, space, target)) {
+					if (DFS(p.x, p.y, p.z, space, target, realSpace)) {
 						path.push(new Point(x, y, z));
 						return true;
 					}
@@ -51,32 +52,7 @@ public class Bee extends Space {
 		return false;
 	}
 
-	private void BFS(int x, int y, int z, int[][][] space, Point target, Space[][][] realSpace) {
-		LinkedList<Point> adjPoints = new LinkedList<Point>();
-
-		Point[] ranks = rankByClosest(new Point(x, y, z), space, target, new Point(x, y, z));
-
-		for(Point p : ranks) adjPoints.add(p);
-
-		while(!adjPoints.isEmpty()) {
-			Point searching = adjPoints.remove();
-
-            try {
-                if (space[searching.x][searching.y][searching.z] != 0) continue;
-                if (searching.x == target.x && searching.y == target.y && searching.z == target.z)
-                    System.out.println("reached hive");
-                System.out.println(searching);
-                space[searching.x][searching.y][searching.z] = 1;
-                Point[] searchingRanks = rankByClosest(searching, space, target, searching);
-                for(Point p : searchingRanks) adjPoints.add(p);
-
-            } catch(ArrayIndexOutOfBoundsException e) {
-                continue;
-            }
-		}
-	}
-
-	private Point[] rankByClosest(Point current, int[][][] space, Point target, Point parent) {
+	private Point[] rankByClosest(Point current, int[][][] space, Point target, Point parent, Space[][][] realSpace) {
 	    Point[] adjPoints = new Point[26];
 
 	    adjPoints[0] = new Point(current.x +1, current.y, current.z, parent);
@@ -149,4 +125,41 @@ public class Bee extends Space {
 		while(!path.empty()) System.out.println(path.pop());
 		return size;
 	}
+
+
+
+
+
+
+
+
+
+	/*private void BFS(int x, int y, int z, int[][][] space, Point target, Space[][][] realSpace) {
+		LinkedList<Point> adjPoints = new LinkedList<Point>();
+
+		Point[] ranks = rankByClosest(new Point(x, y, z), space, target, new Point(x, y, z), realSpace);
+
+		for(Point p : ranks) adjPoints.add(p);
+
+		while(!adjPoints.isEmpty()) {
+			Point searching = adjPoints.remove();
+
+            try {
+				if (searching.x == target.x && searching.y == target.y && searching.z == target.z) break;
+                if (space[searching.x][searching.y][searching.z] != 0) continue;
+                space[searching.x][searching.y][searching.z] = 1;
+                Point[] searchingRanks = rankByClosest(searching, space, target, searching, realSpace);
+                for(Point p : searchingRanks) adjPoints.add(p);
+
+            } catch(ArrayIndexOutOfBoundsException e) {
+                continue;
+            }
+		}
+
+		Point current = new Point(target.x, target.y, target.z);
+		while(current.x != x && current.y != y && current.z != z) {
+			path.push(current);
+			current = realSpace[current.x][current.y][current.z].getParent();
+		}
+	}*/
 }

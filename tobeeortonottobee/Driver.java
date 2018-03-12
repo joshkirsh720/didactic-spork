@@ -157,6 +157,7 @@ public class Driver {
 		    beeArr[i].moveToHive(beeArr[i], hiveArr[i], space);
         }
 
+
         int sumMoves = 0;
         for(int i = 0; i < beeArr.length; i++) {
             System.out.println("Bee #" + (i+1) + ": ");
